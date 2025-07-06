@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>Match Tracker</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+    <style>
+    table {
+        border-collapse: collapse;
+        width: 100%; /* Make the table fill the screen */
+    }
+
+    th,
+    td {
+        border: 1px solid #ccc;
+        padding: 6px;
+        text-align: center;
+    }
+
+    button {
+        width: 100%;           /* Make button fill the cell */
+        padding: 10px;         /* Bigger tap target */
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+
+    td {
+        width: auto;
+    }
+
+    th {
+        background-color: #f4f4f4;
+    }
+
+    body {
+        margin: 0;
+        padding: 1rem;
+        font-family: sans-serif;
+    }
+</style>
+
+</head>
+
+<body>
+    <header>
+        <h1>Match Stat Tracker</h1>
+        <a href="/">← Back to Main Menu</a>
+    </header>
+
+    <div id="playerStatsGrid"></div>
+
+    <script src="{{ url_for('static', filename='match.js') }}"></script>
+</body>
+
+</html>

@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Team Roster</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <style>
+ 
+
+    #rosterContainer {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 1rem;
+    }
+
+    .player-card {
+      background-color: #fff;
+      border: 1px solid #ddd;
+      padding: 1rem;
+      border-radius: 8px;
+      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .player-info {
+      font-size: 1.1rem;
+    }
+
+    .player-card button {
+      background-color: #ff4d4f;
+      border: none;
+      color: white;
+      padding: 0.4rem 0.8rem;
+      font-size: 0.9rem;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .player-card button:hover {
+      background-color: #cc0002;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Team Roster</h1>
+    <a href="/">← Back to Main Menu</a>
+  </header>
+
+  <form id="addPlayerForm">
+    <label for="playerName">Player Name:</label>
+    <input type="text" id="playerName" placeholder="Name" required />
+
+    <label for="jerseyNumber">Jersey # (optional):</label>
+    <input type="number" id="jerseyNumber" placeholder="Jersey #" />
+
+    <button type="submit">Add Player</button>
+  </form>
+
+  <h2>Current Roster</h2>
+  <div id="rosterContainer"></div>
+
+  <script src="/static/roster.js"></script>
+</body>
+
+</html>
