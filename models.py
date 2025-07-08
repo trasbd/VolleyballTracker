@@ -3,10 +3,25 @@ from datetime import datetime, date
 
 db = SQLAlchemy()
 
+import json
+
+class Variable(db.Model):
+    name = db.Column(db.String(100), primary_key=True)
+    value = db.Column(db.Text)
+
+    def set_value(self, val):
+        self.value = json.dumps(val)
+
+    def get_value(self):
+        return json.loads(self.value)
+
+
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    date = db.Column(db.Date, default=date.today)
+    date_time = db.Column(db.DateTime, default=date.today)
+    end_date_time = db.Column(db.DateTime)
     court_number = db.Column(db.Integer)
+    opponent = db.Column(db.String(100))
     games = db.relationship("Game", backref="match", lazy=True)
 
 
@@ -21,6 +36,25 @@ class Game(db.Model):
     match_id = db.Column(db.Integer, db.ForeignKey('match.id'))
 
     stats = db.relationship("Stat", backref="game", lazy=True)
+    positions = db.relationship('GamePosition', backref='game', lazy=True)
+
+class GamePosition(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
+    position_id = db.Column(db.Integer, db.ForeignKey('position.id'), nullable=False)
+    slot = db.Column(db.Integer)  # optional: to store position order (e.g., 1 to 6)
+
+    position = db.relationship("Position")
+
+class Position(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50))  # e.g., "Setter", "Libero", "OH1", "MB2"
+
+class GamePlayer(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    game_id = db.Column(db.Integer, db.ForeignKey('game.id'), nullable=False)
+    player_id = db.Column(db.Integer, db.ForeignKey('player.id'), nullable=False)
+
 
 
 class Player(db.Model):
@@ -35,6 +69,8 @@ class Stat(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     player_id = db.Column(db.Integer, db.ForeignKey('player.id'))
     game_id = db.Column(db.Integer, db.ForeignKey('game.id'))
+    position_start = db.Column(db.Integer, db.ForeignKey('position.id'))
+    position_end = db.Column(db.Integer, db.ForeignKey('position.id'))
     Ace = db.Column(db.Integer, default=0)
     ServiceError = db.Column(db.Integer, default=0)
     Kill = db.Column(db.Integer, default=0)
@@ -45,6 +81,7 @@ class Stat(db.Model):
     Reception = db.Column(db.Integer, default=0)
     ReceptionError = db.Column(db.Integer, default=0)
     Touch = db.Column(db.Integer, default=0)
+    Saves = db.Column(db.Integer, default=0)
 
     def to_dict(self):
         return {
@@ -58,5 +95,6 @@ class Stat(db.Model):
             "Assist": self.Assist,
             "Reception": self.Reception,
             "ReceptionError": self.ReceptionError,
-            "Touch": self.Touch
+            "Touch": self.Touch,
+            "Saves": self.Saves
         }

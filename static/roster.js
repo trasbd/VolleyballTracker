@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const card = document.createElement("div");
       card.className = "player-card";
       card.innerHTML = `#${p.jersey} ${p.name}
-        <button onclick="deletePlayer(${p.id})">Delete</button>`;
+        <button class="delete-btn" onclick="deletePlayer(${p.id})">Delete</button>`;
       rosterDiv.appendChild(card);
     });
   }

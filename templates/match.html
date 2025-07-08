@@ -44,14 +44,68 @@
 </head>
 
 <body>
-    <header>
-        <h1>Match Stat Tracker</h1>
-        <a href="/">← Back to Main Menu</a>
-    </header>
+<header>
+  <h1>Match Stat Tracker</h1>
+  <a href="/">← Back to Main Menu</a>
+</header>
+
+<div class="button-row">
+  <button id="newMatchBtn">New Match</button>
+  <button id="newGameBtn" disabled>New Game</button>
+  <button id="endMatchBtn">End Match</button>
+</div>
+
+<div id="matchInfo" style="margin-bottom: 1rem; border: 1px solid #ccc; padding: 1rem; border-radius: 6px; background: #fefefe;">
+  <div id="matchMeta" style="margin-bottom: 0.5rem; font-weight: 500;">
+    Match: <span id="matchDate">—</span> @ Court <span id="matchCourt">—</span>
+    | Opponent: <span id="matchOpponent">—</span>
+  </div>
+  <div id="gameResults" style="margin-bottom: 0.5rem;">
+    Game Results: 
+    <span id="game1Result">—</span> |
+    <span id="game2Result">—</span> |
+    <span id="game3Result">—</span>
+  </div>
+  <div id="currentGame" style="font-weight: 500;">
+    Current Game: <span id="currentGameNumber">—</span>
+  </div>
+</div>
+
+
+<!-- Modal for creating a new match -->
+<div id="newMatchModal" class="modal" style="display: none;">
+  <div class="modal-content">
+    <h2>Start New Match</h2>
+    <form id="newMatchForm">
+      <label>Date: <input type="date" name="date" required></label><br>
+      <label>Time: <input type="time" name="time" required></label><br>
+      <label>Court #: <input type="number" name="court" required></label><br>
+      <label>Opponent: <input type="text" name="opponent"></label><br><br>
+      <button type="submit">Create Match</button>
+      <button type="button" onclick="closeModal()">Cancel</button>
+    </form>
+  </div>
+</div>
+<!-- New Game Modal -->
+
+<div id="gameScoreModal" class="modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); justify-content:center; align-items:center;">
+  <form id="gameScoreForm" style="background:white; padding:1rem 2rem; border-radius:8px; min-width:300px;">
+    <h3>Enter Previous Game Score</h3>
+    <label>Our Score:</label><br>
+    <input type="number" name="score" required min="0"><br><br>
+    <label>Opponent Score:</label><br>
+    <input type="number" name="score_opponent" required min="0"><br><br>
+    <button type="submit">Save & Start New Game</button>
+    <button type="button" onclick="closeGameModal()" style="margin-left:10px;">Cancel</button>
+  </form>
+</div>
+
+
 
     <div id="playerStatsGrid"></div>
 
     <script src="{{ url_for('static', filename='match.js') }}"></script>
 </body>
+
 
 </html>
