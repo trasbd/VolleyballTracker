@@ -94,7 +94,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         Reception: ["Reception", "ReceptionError"],
         Assist: ["Assist"],
         Touch: ["Touch", "Saves"],
-        
+
     };
 
     const statToString = {
@@ -299,9 +299,26 @@ const newGameBtn = document.getElementById("newGameBtn");
 const matchModal = document.getElementById("newMatchModal");
 const matchForm = document.getElementById("newMatchForm");
 
-newMatchBtn.onclick = () => {
+newMatchBtn.onclick = async () => {
     matchModal.style.display = "flex";
+
+    const res = await fetch(`/api/nextmatch`, { method: "GET" });
+
+    if (res.ok) {
+        const match_json = await res.json();
+        const dt = new Date(match_json.date_time);  // ⬅️ parse ISO string
+
+        // Format as YYYY-MM-DD and HH:MM for input elements
+        matchForm.date.value = dt.toISOString().split("T")[0];
+
+        const timeStr = dt.toTimeString().slice(0, 5);  // "HH:MM"
+        matchForm.time.value = timeStr;
+
+        matchForm.opponent.value = match_json.opponent || "";
+        matchForm.court.value = match_json.court || "";
+    }
 };
+
 
 function closeModal() {
     matchModal.style.display = "none";
@@ -346,7 +363,7 @@ matchForm.onsubmit = async (e) => {
 
     currentGameNumber = 0;
 
-    document.getElementById("currentGameNumber").textContent =  "—";
+    document.getElementById("currentGameNumber").textContent = "—";
 
     document.querySelectorAll("#playerStatsGrid select").forEach(sel => {
         sel.selectedIndex = 0;

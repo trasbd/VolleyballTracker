@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, jsonify
 from models import db, Player, Stat, Match, Game, Variable, GamePlayer
 from flask_cors import CORS
 from datetime import datetime
+from scheduleParse import getSchedule
 
 app = Flask(__name__)
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///db.sqlite3"
@@ -339,6 +340,29 @@ def get_players_for_game(game_id):
     players = GamePlayer.query.filter_by(game_id=game_id).all()
     player_ids = [gp.player_id for gp in players]
     return jsonify(player_ids)
+
+
+@app.route("/api/nextmatch", methods=["GET"])
+def get_next_match():
+    raw_team_id: str | None = request.args.get("team_id")
+    team_id = int(raw_team_id) if raw_team_id is not None else None
+
+    matches = getSchedule(team_id)  # should return a list of MatchItem or similar
+    now = datetime.now()
+
+    # Filter only matches in the future
+    future_matches = [m for m in matches if (m.date_time and m.date_time > now)]
+
+    # Sort by soonest date_time
+    future_matches.sort(key=lambda m: m.date_time)
+
+    next_match = future_matches[0] if future_matches else None
+
+    if next_match:
+        return jsonify(next_match.to_dict())  # Assuming MatchItem has a `to_dict()` method
+    else:
+        return jsonify(None)
+
 
 
 @app.route("/api/stats", methods=["GET"])

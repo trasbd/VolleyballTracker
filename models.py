@@ -15,6 +15,9 @@ class Variable(db.Model):
     def get_value(self):
         return json.loads(self.value)
 
+class Team(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
 
 class Match(db.Model):
     id = db.Column(db.Integer, primary_key=True)
@@ -22,6 +25,8 @@ class Match(db.Model):
     end_date_time = db.Column(db.DateTime)
     court_number = db.Column(db.Integer)
     opponent = db.Column(db.String(100))
+    team_id = db.Column(db.Integer, db.ForeignKey("team.id"))
+
     games = db.relationship("Game", backref="match", lazy=True)
 
 
@@ -61,6 +66,7 @@ class Player(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100))
     jersey = db.Column(db.Integer)
+    team_id = db.Column(db.Integer, db.ForeignKey('team.id'))
 
     def to_dict(self):
         return {"id": self.id, "name": self.name, "jersey": self.jersey}
